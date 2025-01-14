@@ -1,6 +1,6 @@
 // a2pvQ3d6yLig2CL8
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,6 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+} from "@/features/api/authApi";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Login() {
   const [loginInput, setloginInput] = useState({
@@ -23,6 +29,26 @@ export default function Login() {
     email: "",
     password: "",
   });
+
+  const [
+    registerUser,
+    {
+      data: registerData,
+      error: registerError,
+      isLoading: registerIsLoading,
+      isSuccess: registerIsSuccess,
+    },
+  ] = useRegisterUserMutation(); //gives data of the registered User
+  const [
+    loginUser,
+    {
+      data: loginData,
+      error: loginError,
+      isLoading: loginIsLoading,
+      isSuccess: loginIsSuccess,
+    },
+  ] = useLoginUserMutation();
+
   const changeInputHandler = (e, type) => {
     const { name, value } = e.target;
     if (type === "signup") {
@@ -31,11 +57,30 @@ export default function Login() {
       setloginInput({ ...loginInput, [name]: value });
     }
   };
-  const handleSubmit =(type)=>{
-    const inputData = type==="signup"? signupInput:loginInput;
-    console.log(inputData);
+  const handleSubmit = async(type) => {
+    const inputData = type === "signup" ? signupInput : loginInput;
+    const action = type==="signup"? registerUser:loginUser;
+    await action(inputData);
+  };
+  useEffect(() => {
     
-  }
+    if(registerIsSuccess && registerData){
+      toast.success(registerData.message || "Signup Successful!");
+    }
+    if(loginIsSuccess && loginData){
+      toast.success(loginData.message || "Login Successful!");
+    }
+    if(registerError){
+      toast.error(registerData.message || "Signup Failed")
+    }
+    if(loginError){
+      toast.error(loginData.message || "Login Failed")
+    }
+
+  }, [loginIsLoading,registerIsLoading,loginError,registerError,loginData,registerData])
+  
+
+
   return (
     <div className="flex items-center w-full justify-center mt-10">
       <Tabs defaultValue="signup" className="w-[400px]">
@@ -58,7 +103,9 @@ export default function Login() {
                   name="name"
                   value={signupInput.name}
                   type="text"
-                  onChange={(e)=>{ changeInputHandler(e,"signup") }}
+                  onChange={(e) => {
+                    changeInputHandler(e, "signup");
+                  }}
                   placeholder="Vidhi"
                   required="true"
                 />
@@ -69,7 +116,9 @@ export default function Login() {
                   name="email"
                   value={signupInput.email}
                   id="email"
-                  onChange={(e)=>{ changeInputHandler(e,"signup") }}
+                  onChange={(e) => {
+                    changeInputHandler(e, "signup");
+                  }}
                   placeholder="abc@gmail.com"
                   required="true"
                 />
@@ -83,12 +132,23 @@ export default function Login() {
                   placeholder="....."
                   type="password"
                   required="true"
-                  onChange={(e)=>{ changeInputHandler(e,"signup") }}
+                  onChange={(e) => {
+                    changeInputHandler(e, "signup");
+                  }}
                 />
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={()=> handleSubmit("signup")}>Signup</Button>
+              <Button disabled={registerIsLoading} onClick={() => handleSubmit("signup")}>
+                {
+                  registerIsLoading ? (
+                    <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin"/>Please Wait
+                    </>
+                  ):"Signup"
+
+                }
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -104,7 +164,9 @@ export default function Login() {
                 <Input
                   name="email"
                   value={loginInput.email}
-                  onChange={(e)=>{ changeInputHandler(e,"login") }}
+                  onChange={(e) => {
+                    changeInputHandler(e, "login");
+                  }}
                   placeholder="abc@gmail.com"
                   required="true"
                 />
@@ -114,15 +176,26 @@ export default function Login() {
                 <Input
                   name="password"
                   value={loginInput.password}
-                  onChange={(e)=>{ changeInputHandler(e,"login") }}
-                  placeholder="....."  
+                  onChange={(e) => {
+                    changeInputHandler(e, "login");
+                  }}
+                  placeholder="....."
                   type="password"
                   required="true"
                 />
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={()=> handleSubmit("login")}>Login</Button>
+            <Button disabled={loginIsLoading} onClick={() => handleSubmit("login")}>
+                {
+                  loginIsLoading ? (
+                    <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin"/>Please Wait
+                    </>
+                  ):"Login"
+
+                }
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
