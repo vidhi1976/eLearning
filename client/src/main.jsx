@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 import { Toaster } from './components/ui/sonner'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  <StrictMode >
     <Provider store={appStore}>
       <App />
       <Toaster/>

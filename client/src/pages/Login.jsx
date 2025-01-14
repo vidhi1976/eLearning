@@ -82,14 +82,15 @@ export default function Login() {
 
 
   return (
-    <div className="flex items-center w-full justify-center mt-10">
+    <div className="flex items-center w-full justify-center mt-28 ">
+        
       <Tabs defaultValue="signup" className="w-[400px]">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="signup">Signup</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 ">
+          <TabsTrigger value="signup" >Signup</TabsTrigger>
           <TabsTrigger value="login">Login</TabsTrigger>
         </TabsList>
-        <TabsContent value="signup">
-          <Card>
+        <TabsContent value="signup" >
+          <Card >
             <CardHeader>
               <CardTitle>Signup</CardTitle>
               <CardDescription>
@@ -200,6 +201,7 @@ export default function Login() {
           </Card>
         </TabsContent>
       </Tabs>
+      
     </div>
   );
 }
