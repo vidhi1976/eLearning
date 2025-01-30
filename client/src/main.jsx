@@ -9,8 +9,10 @@ import { Toaster } from './components/ui/sonner'
 createRoot(document.getElementById('root')).render(
   <StrictMode >
     <Provider store={appStore}>
+    {/* appStore: The Redux store, created using RTK, which holds the global state of your app. */}
+    {/* Provider: A React-Redux component that makes the Redux store available to your entire app */}
       <App />
       <Toaster/>
     </Provider>
-  </StrictMode>,
+  </StrictMode>
 )

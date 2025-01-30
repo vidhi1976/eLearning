@@ -9,7 +9,7 @@ function App() {
     <main>
         <Navbar/>
         <Login/>
-      </main>
+    </main>
     
       
   )

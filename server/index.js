@@ -13,8 +13,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // default middlewares
-app.use(express.json());
-app.use(cookieParser());
+app.use(express.json()); //converts the form data into json form and adds it to the req.body
+
+app.use(cookieParser());//adds cookiedata in req.cookies
 app.use(cors({
     origin:"http://localhost:5173",
     credentials:true
