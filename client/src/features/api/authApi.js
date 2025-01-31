@@ -14,14 +14,14 @@ export const authApi = createApi({
     registerUser: builder.mutation({
       query: (inputData) => ({
         url: "register",
-        method: "post",
+        method: "POST",
         body: inputData,
       }),
     }),
     loginUser: builder.mutation({
       query: (inputData) => ({
         url: "login",
-        method: "post", // Ensure the method is uppercase for consistency
+        method: "POST", // Ensure the method is uppercase for consistency
         body: inputData,
       }),
       async onQueryStarted(_, { queryFulfilled, dispatch }) {
@@ -33,10 +33,17 @@ export const authApi = createApi({
         }
       },
     }),
+    loadUser:builder.query({
+      query:()=>({
+        url:"profile",
+        method:"GET"
+      }),
+    }),
   }),
 });
 
 export const {
   useRegisterUserMutation,
   useLoginUserMutation,
+  useLoadUserQuery,
 } = authApi;
