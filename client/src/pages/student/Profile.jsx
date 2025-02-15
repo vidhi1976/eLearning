@@ -23,7 +23,7 @@ const Profile = () => {
   const [profilePhoto, setProfilePhoto] = useState("");
 
   // Fetch user data
-  const { data, isLoading } = useLoadUserQuery();
+  const { data, isLoading, refetch } = useLoadUserQuery();
 
   // Mutation for updating user profile
   const [
@@ -51,6 +51,7 @@ const Profile = () => {
   // Handle success and error messages
   useEffect(() => {
     if (isSuccess) {
+      refetch();
       toast.success(data.message || "Profile updated successfully.");
     }
     if (isError) {

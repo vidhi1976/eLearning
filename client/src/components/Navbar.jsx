@@ -1,5 +1,5 @@
 import { BookOpenCheck, Menu } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,11 +24,24 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import DarkMode from "@/DarkMode";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useLogoutUserMutation } from "@/features/api/authApi";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const user = true;
-  
+  const navigate = useNavigate();
+  const[logoutUser, { data, isSuccess }] = useLogoutUserMutation();
+  const logoutHandler = async () => {
+    await logoutUser();
+  };
+  useEffect(() => {
+    if (isSuccess) {
+     
+      toast.success(data.message || "User logged out");
+      navigate("/login");
+    }
+  }, [isSuccess]);
   return (
     <div className="h-14 dark:bg-[#020817] bg-gray-300  fixed top-0 left-0 right-0 duration-300 z-10">
       {/* // desktop: */}
@@ -54,10 +67,14 @@ const Navbar = () => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem><Link to="my-learning">My Learning</Link></DropdownMenuItem>
-                  <DropdownMenuItem><Link to="profile">Edit Profile</Link></DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="my-learning">My Learning</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="profile">Edit Profile</Link>
+                  </DropdownMenuItem>
 
-                  <DropdownMenuItem>Log out</DropdownMenuItem>
+                  <DropdownMenuItem onClick={logoutHandler}>Log out</DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Dashboard</DropdownMenuItem>
@@ -103,8 +120,12 @@ const MobileNavbar = () => {
         </SheetHeader>
         <Separator className="mr-2" />
         <nav className="flex flex-col space-y-4">
-          <span><Link to="my-learning">My Learning</Link></span>
-          <span><Link to="profile">Edit Profile</Link></span>
+          <span>
+            <Link to="my-learning">My Learning</Link>
+          </span>
+          <span>
+            <Link to="profile">Edit Profile</Link>
+          </span>
           <span>Log Out</span>
         </nav>
         {role === "instructor" && (
